@@ -15,21 +15,25 @@ struct FavouritesListView: View {
                 PageView(pages: ImageViewModel().names.map{FavouritesView(imageName: $0)})
                     .aspectRatio(3 / 2, contentMode: .fit)
                     .listRowInsets(EdgeInsets())
-                                
-                if favourites.isEmpty() {
-                    VStack{
-                        Text("You have no favourites yet")
-                            .foregroundColor(.white)
-                    } 
-                } else {
-                    ForEach(Array(self.favourites.getFavouriteCitiesIDs()), id: \.self) { city in
-                        FavouriteRowView(city: city)
+                
+                ScrollView(.vertical, showsIndicators: false) {
+                    if favourites.isEmpty() {
+                        VStack{
+                            Text("You have no favourites yet")
+                                .foregroundColor(.white)
+                        }
+                    } else {
+                        ForEach(Array(self.favourites.getFavouriteCitiesIDs()), id: \.self) { city in
+                            FavouriteRowView(city: city)
+                        }
                     }
                 }
+                .frame(maxWidth: getRect().width)
                 
                 Spacer()
             }
         }
+        .padding(.top, safeArea().top)
     }
 }
 
@@ -38,7 +42,7 @@ struct FavouriteRowView: View {
     
     var body: some View {
         HStack(spacing: 10) {
-            Image("map") 
+            Image("map")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 45, height: 45)
@@ -56,16 +60,26 @@ struct FavouriteRowView: View {
         }
         .padding(5)
         .padding(.vertical, 5)
-        .background {
-            Color.mint.opacity(0.2)
-                .cornerRadius(10, corners: [.topLeft, .bottomRight, .bottomLeft])
-        }
-        .background {
-            Rectangle()
-                .fill(.ultraThinMaterial)
-                .cornerRadius(10, corners: [.topLeft, .topRight, .bottomLeft])
-        }
+        .background(
+            HStack {
+                Spacer()
+            }
+                .padding(.horizontal)
+                .padding(.top, safeArea().top)
+                .padding(.bottom, 60)
+                .background(Color("unicorn"))
+                .opacity(0.5)
+                .clipShape(
+                    Corners(corner: [.bottomRight, .topLeft], size: CGSize(width: getRect().width, height: 20))
+                )
+        )
+        .modifier(FlatGlassView())
     }
+}
+
+func randomColor() -> Color {
+    let color = [.teal, .mint, Color("unicorn")].randomElement() ?? .cyan
+    return color
 }
 
 struct FavouritesListView_Previews: PreviewProvider {

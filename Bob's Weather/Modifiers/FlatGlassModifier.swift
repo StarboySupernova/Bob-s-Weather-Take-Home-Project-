@@ -11,8 +11,8 @@ import SwiftUI
 struct FlatGlassView: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .padding()
+            //.padding()
             .background(.ultraThinMaterial)
-            .cornerRadius(14)
+            .cornerRadius(10)
     }
 }

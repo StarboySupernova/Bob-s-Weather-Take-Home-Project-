@@ -15,7 +15,7 @@ struct FavouritesView: View {
             .resizable()
             .aspectRatio(3 / 2, contentMode: .fit)
             .overlay(TextOverlay())
-            .cornerRadius(15, corners: [.bottomLeft, .bottomRight])
+            .cornerRadius(15, corners: [.bottomLeft, .bottomRight, .topRight])
     }
 }
 
@@ -31,7 +31,7 @@ struct TextOverlay: View {
         VStack {
             ZStack(alignment: .topTrailing) {
                 gradient
-                VStack(alignment: .leading) {
+                VStack(alignment: .trailing) {
                     Text("Your Location")
                         .font(.caption)
                         .fontWeight(.thin)
