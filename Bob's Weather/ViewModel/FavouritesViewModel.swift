@@ -20,10 +20,15 @@ class FavouritesViewModel: ObservableObject, Encodable {
         favouriteCities = []
         // load our saved data
         
-        if let data = UserDefaults.standard.data(forKey: saveKey) {
+        /*if let data = UserDefaults.standard.data(forKey: saveKey) {
             if let decoded = try? JSONDecoder().decode(Set<Locator>.self, from: data) {
                 self.favouriteCities = decoded
             }
+        }*/
+        do {
+            favouriteCities = try UserDefaults.standard.getObject(forKey: saveKey, castTo: Set<Locator>.self)
+        } catch {
+            print(error.localizedDescription)
         }
     }
     

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct FavouritesListView: View {
     @EnvironmentObject var favourites: FavouritesViewModel
+    var cities: String?
     var body: some View {
         Group {
             VStack(spacing: 20) {
@@ -27,6 +28,9 @@ struct FavouritesListView: View {
                             FavouriteRowView(city: city)
                         }
                     }
+                }
+                .refreshable {
+                    self.favourites.getFavouriteCitiesIDs()
                 }
                 .frame(maxWidth: getRect().width)
                 
@@ -78,7 +82,10 @@ struct FavouriteRowView: View {
 }
 
 func randomColor() -> Color {
-    let color = [.teal, .mint, Color("unicorn")].randomElement() ?? .cyan
+    var color : Color!
+    for nextColor in [.teal, .mint, Color("unicorn")] {
+        color = nextColor
+    }
     return color
 }
 
