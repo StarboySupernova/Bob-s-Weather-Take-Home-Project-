@@ -13,7 +13,6 @@ struct Bob_s_WeatherApp: App {
     @StateObject var weatherViewModel = WeatherViewModelImplementation(service: WeatherServiceImplementation())
     @StateObject var locationViewModel = LocationViewModel()
     @StateObject var favouritesViewModel =  FavouritesViewModel()
-    @StateObject var locationManager: LocationManager = LocationManager()
     
     var body: some Scene {
         WindowGroup {

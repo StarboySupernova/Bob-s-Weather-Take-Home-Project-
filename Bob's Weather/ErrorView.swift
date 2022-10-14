@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ErrorView: View {
+    @Environment(\.dismiss) var dismiss
     typealias ErrorViewActionHandler = () -> Void
     
     let error: Error
@@ -48,6 +49,13 @@ struct ErrorView: View {
             .foregroundColor(.white)
             .font(.system(size: 15, weight: .heavy, design: .rounded))
             .cornerRadius(10)
+            
+            Button {
+                dismiss()
+            } label: {
+                Text("OK")
+            }
+
         }
     }
 }

@@ -13,7 +13,8 @@ protocol ObjectSavable {
     func getObject<Object>(forKey: String, castTo type: Object.Type) throws -> Object where Object: Decodable
 }
 
-struct Locator: Hashable, Codable {
+struct Locator: Hashable, Codable, Identifiable {
+    var id = UUID()
     var name: String
     var latitude: Double
     var longitude: Double

@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct FavouritesListView: View {
+    //@EnvironmentObject var locationViewModel: LocationViewModel
     @EnvironmentObject var favourites: FavouritesViewModel
-    var cities: String?
     var body: some View {
         Group {
             VStack(spacing: 20) {
@@ -17,27 +17,42 @@ struct FavouritesListView: View {
                     .aspectRatio(3 / 2, contentMode: .fit)
                     .listRowInsets(EdgeInsets())
                 
-                ScrollView(.vertical, showsIndicators: false) {
-                    if favourites.isEmpty() {
+                Group {
+                    if /*locationViewModel.favourited.isEmpty*/ favourites.isEmpty() {
                         VStack{
                             Text("You have no favourites yet")
                                 .foregroundColor(.white)
                         }
                     } else {
-                        ForEach(Array(self.favourites.getFavouriteCitiesIDs()), id: \.self) { city in
-                            FavouriteRowView(city: city)
+                        List(Array(self.favourites.favouriteCities)) { city in
+                            FavouriteRowView(city: city.name)
                         }
+                        /*List(locationViewModel.favourited) { city in
+                            FavouriteRowView(city: city)
+                        }*/
+                        /*ForEach(locationViewModel.favourited.compactMap{$0.value}, id: \.self) { loc in
+                            FavouriteRowView(city: loc.locality!)
+                        }*/
                     }
-                }
-                .refreshable {
-                    self.favourites.getFavouriteCitiesIDs()
                 }
                 .frame(maxWidth: getRect().width)
                 
                 Spacer()
+                
+                Button {
+                    favourites.refresh()
+                    print(favourites.favouriteCities.count)
+                } label: {
+                    Text("Refresh")
+                        .foregroundColor(.white)
+                }
+
             }
         }
         .padding(.top, safeArea().top)
+        .onAppear {
+            //favourites.refresh()
+        }
     }
 }
 
@@ -79,14 +94,6 @@ struct FavouriteRowView: View {
         )
         .modifier(FlatGlassView())
     }
-}
-
-func randomColor() -> Color {
-    var color : Color!
-    for nextColor in [.teal, .mint, Color("unicorn")] {
-        color = nextColor
-    }
-    return color
 }
 
 struct FavouritesListView_Previews: PreviewProvider {

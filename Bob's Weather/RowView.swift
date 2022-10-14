@@ -32,6 +32,7 @@ struct RowView: View {
 
 struct Row: View {
     @EnvironmentObject var favouritesViewModel: FavouritesViewModel
+    @EnvironmentObject var locationViewModel: LocationViewModel
     @State private var showingSheet: Bool = false
     @State private var showingError: Bool = false
     let forecast: Forecast
@@ -56,13 +57,25 @@ struct Row: View {
             }
         }
         .onTapGesture(count: 2) {
-            if let city = LocationViewModel.shared.currentPlacemark?.locality {
+            if /*LocationViewModel.shared.lastSeenLocation != nil*/ let city = LocationViewModel.shared.currentPlacemark?.locality {
+                //locationViewModel.addFavourite()
+                if favouritesViewModel.contains(city) {
+                    showingSheet.toggle()
+                } else {
+                let location = Locator(name: city, latitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.latitude)!, longitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.longitude)!)
+                               favouritesViewModel.add(location)
+                showingSheet.toggle()
+                }
+            } else {
+                showingError.toggle()
+            }
+            /*if let city = LocationViewModel.shared.currentPlacemark?.locality {
                 let location = Locator(name: city, latitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.latitude)!, longitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.longitude)!)
                 favouritesViewModel.add(location)
                 showingSheet.toggle()
             } else {
                 showingError.toggle()
-            }
+            }*/
         }
         .sheet(isPresented: $showingSheet) {
             showingSheet = false
@@ -79,14 +92,23 @@ struct Row: View {
 
 struct FavouritesSuccessView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var favouritesViewModel: FavouritesViewModel
     
     var body: some View {
         Group {
             VStack {
-                Text("Added current location \(LocationViewModel.shared.currentPlacemark?.locality ?? "") to your favourites")
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.white)
-                
+                if let city = LocationViewModel.shared.currentPlacemark?.locality {
+                    if favouritesViewModel.contains(city) {
+                        Text("Current location already added to your favourites")
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
+                    } else {
+                        Text("Added current location \(city) to your favourites")
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
+                    }
+                }
+
                 Button {
                     dismiss()
                 } label: {

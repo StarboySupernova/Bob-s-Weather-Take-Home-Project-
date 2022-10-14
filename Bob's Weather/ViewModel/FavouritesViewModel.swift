@@ -9,12 +9,12 @@ import Foundation
 import CoreLocation
 import SwiftUI
 
-class FavouritesViewModel: ObservableObject, Encodable {
+class FavouritesViewModel: ObservableObject {
     // the actual locations the user has favourited
-    private var favouriteCities: Set<Locator>
+    @Published var favouriteCities: Set<Locator>
     
     // the key we're using to read/write in UserDefaults
-    private let saveKey = "FavouritesList"
+    private let saveKey = "Favoured"
     
     init() {
         favouriteCities = []
@@ -32,8 +32,14 @@ class FavouritesViewModel: ObservableObject, Encodable {
         }
     }
     
-    func getFavouriteCitiesIDs() -> Set<String> {
-        Set(self.favouriteCities.map{$0.name})
+    func getFavouriteCitiesIDs() -> Set<String> { //may need to return this as an array
+        var favourites: Set<String> = []
+        for i in self.favouriteCities {
+            favourites.insert(i.name)
+        }
+        
+        return favourites
+        //Set(self.favouriteCities.map{$0.name})
     }
     func isEmpty() -> Bool {
         self.favouriteCities.count < 1
@@ -50,6 +56,7 @@ class FavouritesViewModel: ObservableObject, Encodable {
     func add(_ city: Locator) {
         objectWillChange.send()
         favouriteCities.insert(city)
+        //favouriteCities.append(city)
         save()
     }
     
@@ -73,5 +80,13 @@ class FavouritesViewModel: ObservableObject, Encodable {
         /* if let data = try? JSONEncoder().encode(favouriteCities) {
             UserDefaults.standard.setObject(data, forKey: saveKey)
         }*/
+    }
+    
+    func refresh(){
+        do {
+            favouriteCities = try UserDefaults.standard.getObject(forKey: saveKey, castTo: Set<Locator>.self)
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 }

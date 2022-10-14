@@ -12,6 +12,7 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var authorizationStatus: CLAuthorizationStatus
     @Published public var lastSeenLocation: CLLocation?
     @Published var currentPlacemark: CLPlacemark?
+    @Published var favourited: [CLLocation : CLPlacemark] = [:]
     public static var shared = LocationViewModel()
     
     private let locationManager: CLLocationManager
@@ -44,6 +45,13 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         let geocoder = CLGeocoder()
         geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
             self.currentPlacemark = placemarks?.first
+        }
+    }
+    
+    func addFavourite(){
+        if (lastSeenLocation != nil) {
+            //favourited.append([lastSeenLocation!: currentPlacemark!])
+            favourited[lastSeenLocation!] = currentPlacemark!
         }
     }
 }
