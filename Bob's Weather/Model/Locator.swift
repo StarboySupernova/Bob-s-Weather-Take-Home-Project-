@@ -20,4 +20,3 @@ struct Locator: Hashable, Codable, Identifiable {
     var longitude: Double
 }
 
-

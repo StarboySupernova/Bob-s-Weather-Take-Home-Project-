@@ -14,6 +14,7 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var currentPlacemark: CLPlacemark?
     @Published var favourited: [CLLocation : CLPlacemark] = [:]
     public static var shared = LocationViewModel()
+    static var customLocation: CLLocationCoordinate2D?
     
     private let locationManager: CLLocationManager
     
@@ -48,16 +49,24 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    func addFavourite(){
+    /*func addFavourite(){
         if (lastSeenLocation != nil) {
             //favourited.append([lastSeenLocation!: currentPlacemark!])
             favourited[lastSeenLocation!] = currentPlacemark!
         }
-    }
+    }*/
 }
 
 extension LocationViewModel {
     static var antarctica: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: -80.362542, longitude: 20.562968)
+    }
+    
+    static func locationProvider(latitude: Double? = nil, longitude: Double? = nil) {
+        if (latitude == nil) || (longitude == nil) {
+            return
+        } else {
+            customLocation = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+        }
     }
 }

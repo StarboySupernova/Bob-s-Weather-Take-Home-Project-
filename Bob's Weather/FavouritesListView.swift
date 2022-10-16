@@ -6,9 +6,9 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct FavouritesListView: View {
-    //@EnvironmentObject var locationViewModel: LocationViewModel
     @EnvironmentObject var favourites: FavouritesViewModel
     var body: some View {
         Group {
@@ -18,7 +18,7 @@ struct FavouritesListView: View {
                     .listRowInsets(EdgeInsets())
                 
                 Group {
-                    if /*locationViewModel.favourited.isEmpty*/ favourites.isEmpty() {
+                    if favourites.isEmpty() {
                         VStack{
                             Text("You have no favourites yet")
                                 .foregroundColor(.white)
@@ -26,13 +26,8 @@ struct FavouritesListView: View {
                     } else {
                         List(Array(self.favourites.favouriteCities)) { city in
                             FavouriteRowView(city: city.name)
-                        }
-                        /*List(locationViewModel.favourited) { city in
-                            FavouriteRowView(city: city)
-                        }*/
-                        /*ForEach(locationViewModel.favourited.compactMap{$0.value}, id: \.self) { loc in
-                            FavouriteRowView(city: loc.locality!)
-                        }*/
+                                .frame(maxWidth: getRect().width)
+                        }                        
                     }
                 }
                 .frame(maxWidth: getRect().width)
@@ -57,6 +52,14 @@ struct FavouritesListView: View {
 }
 
 struct FavouriteRowView: View {
+    @EnvironmentObject var locationViewModel: LocationViewModel
+    @EnvironmentObject var favouritesViewModel: FavouritesViewModel
+    @EnvironmentObject var weatherViewModel: WeatherViewModelImplementation
+    
+    @State private var showingCustom: Bool = false
+    @State private var showingError: Bool = false
+    @State private var customLocation: CLLocationCoordinate2D? = nil
+    
     var city: String
     
     var body: some View {
@@ -71,7 +74,13 @@ struct FavouriteRowView: View {
             
             //Button for checking weather in favourite location
             Button {
-                
+                if let extractedCity = favouritesViewModel.first(occurring: city) {
+                    LocationViewModel.locationProvider(latitude: extractedCity.latitude, longitude: extractedCity.longitude)
+                    if LocationViewModel.customLocation != nil {
+                        weatherViewModel.getForecast()
+                        showingCustom.toggle()
+                    }
+                }
             } label: {
                 Text("Check Weather")
             }
@@ -93,6 +102,21 @@ struct FavouriteRowView: View {
                 )
         )
         .modifier(FlatGlassView())
+        .sheet(isPresented: $showingCustom) {
+            LocationViewModel.customLocation = nil 
+        } content: {
+            switch weatherViewModel.state {
+                case .forecastSuccess(content: let forecast) :
+                    WeatherSuccess(forecast: forecast)
+                case .loading :
+                    ProgressView()
+                case .failed(error: let error) :
+                    ErrorView(error: error) {
+                        weatherViewModel.getForecast()
+                    }
+            }
+        }
+
     }
 }
 

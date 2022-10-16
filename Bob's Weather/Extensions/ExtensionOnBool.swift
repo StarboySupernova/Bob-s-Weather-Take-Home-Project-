@@ -68,15 +68,15 @@ struct ClearBackground<S: Shape>: View {
             if isHighlighted {
                 shape
                     .fill(LinearGradient(Color.lightEnd, Color.lightStart))
-                    .overlay(shape.stroke(LinearGradient(Color.lightStart, Color.lightEnd), lineWidth: 4)) //bevel appears when button is pressed
-                    .shadow(color: Color.darkStart, radius: 10, x: 5, y: 5)
-                    .shadow(color: Color.darkEnd, radius: 10, x: -5, y: -5)
+                    .overlay(shape.stroke(LinearGradient(Color.lightStart, Color.lightEnd), lineWidth: 1)) //bevel appears when button is pressed
+                    .shadow(color: Color.darkStart, radius: 5, x: 3, y: 3)
+                    .shadow(color: Color.darkEnd, radius: 5, x: -3, y: -3)
             } else {
                 shape
                     .fill(LinearGradient(Color.clear, Color.clear))
-                    .overlay(shape.stroke(LinearGradient(Color.lightStart, Color.lightEnd), lineWidth: 4))
-                    .shadow(color: Color.darkStart, radius: 10, x: -10, y: -10)
-                    .shadow(color: Color.darkEnd, radius: 10, x: 10, y: 10)
+                    .overlay(shape.stroke(LinearGradient(Color.lightStart, Color.lightEnd), lineWidth: 1))
+                    .shadow(color: Color.darkStart, radius: 5, x: -5, y: -5)
+                    .shadow(color: Color.darkEnd, radius: 5, x: 5, y: 5)
             }
         }
     }
@@ -96,7 +96,7 @@ struct ColorfulButtonStyle: ButtonStyle {
 struct CapsuleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding(10)
+            .padding(5)
             .contentShape(Capsule())
             .background(
                 ClearBackground(isHighlighted: configuration.isPressed, shape: Capsule())

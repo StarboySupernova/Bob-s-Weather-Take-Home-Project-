@@ -12,7 +12,7 @@ import SwiftUI
 class FavouritesViewModel: ObservableObject {
     // the actual locations the user has favourited
     @Published var favouriteCities: Set<Locator>
-    
+        
     // the key we're using to read/write in UserDefaults
     private let saveKey = "Favoured"
     
@@ -29,6 +29,14 @@ class FavouritesViewModel: ObservableObject {
             favouriteCities = try UserDefaults.standard.getObject(forKey: saveKey, castTo: Set<Locator>.self)
         } catch {
             print(error.localizedDescription)
+        }
+    }
+    
+    func first(occurring city: String) -> Locator? {
+        if let locator = favouriteCities.first(where: {$0.name == city}) {
+            return locator
+        } else {
+            return nil
         }
     }
     

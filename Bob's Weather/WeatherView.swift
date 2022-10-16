@@ -33,7 +33,7 @@ struct WeatherView: View {
                             case .loading :
                                 VStack {
                                     ProgressView()
-                                    Text("\(coordinate?.latitude ?? 0)")
+                                    Text("Loading weather data \(coordinate?.latitude ?? 0)")
                                 }
                             case.failed(error: let error) :
                                 ErrorView(error: error) {
