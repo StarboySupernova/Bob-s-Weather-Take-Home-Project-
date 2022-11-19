@@ -41,7 +41,7 @@ extension OpenWeatherMapAPI: APIBuilder {
             case .getCurrentWeather:
                 return URL(string: "https://api.openweathermap.org/data/2.5/weather?lat=-25.750445&lon=28.237550&exclude=minutely,hourly,alerts&units=metric&APPID=\(self.key)")! //should find a way to inject location here
             case .getForecast:
-                return URL(string: "https://api.openweathermap.org/data/2.5/forecast?lat=\(LocationViewModel.customLocation?.latitude ?? LocationViewModel.shared.lastSeenLocation?.coordinate.latitude ?? LocationViewModel.antarctica.latitude)&lon=\(LocationViewModel.customLocation?.longitude ?? LocationViewModel.shared.lastSeenLocation?.coordinate.longitude ?? LocationViewModel.antarctica.longitude)&exclude=minutely,hourly,alerts&cnt=5&units=metric&appid=\(self.key)")!
+                return URL(string: "https://api.openweathermap.org/data/2.5/forecast?lat=\(LocationViewModel.customLocation?.latitude ?? LocationViewModel.shared.lastSeenLocation?.coordinate.latitude ?? LocationViewModel.antarctica.latitude)&lon=\(LocationViewModel.customLocation?.longitude ?? LocationViewModel.shared.lastSeenLocation?.coordinate.longitude ?? LocationViewModel.antarctica.longitude)&exclude=minutely,hourly,alerts&units=metric&appid=\(self.key)")!
         }
     }
     
