@@ -45,10 +45,11 @@ struct WeatherView: View {
                     ErrorView(error: APIError.unknown){}
             }
         }
+        //putting this on weather success //can't do that because it never appears because this function is never called
         .onAppear {
-            weatherViewModel.getForecast()
+            weatherViewModel.getForecast() //should possibly use DispatchQueue here
+            LocationViewModel.customLocation = nil
         }
-        
     }
     
     var coordinate: CLLocationCoordinate2D? {
@@ -65,59 +66,103 @@ struct WeatherSuccess : View {
     }
     
     var body: some View {
-        ZStack {
-            VStack {
-                if let currentWeather = forecast.list.first(where: {
-                    Date(timeIntervalSince1970: TimeInterval($0.dt)) > Date.now
-                })
-                {
-                    switch currentWeather.weather.first!.main {
+        if let weatherList = forecastResultStrip(forecast: forecast) {
+            ZStack {
+                VStack {
+                    switch weatherList.first?.weather.first?.main {
                         case let name where name == "Clear" :
-                            Image("sea_sunny") //make this dynamic
+                            Image("sea_sunny")
                                 .resizable()
-                                .aspectRatio(3 / 2, contentMode: .fit)
-                                .frame(maxWidth: .infinity)
+                                //.aspectRatio(contentMode: .fill)
+                                .frame(maxWidth: getRect().width, maxHeight: getRect().height * 0.4)
                                 .edgesIgnoringSafeArea([.top, .horizontal])
                         case let name where name == "Rain" :
-                            Image("sea_rainy") //make this dynamic
+                            Image("sea_rainy")
                                 .resizable()
-                                .aspectRatio(3 / 2, contentMode: .fit)
-                                .frame(maxWidth: .infinity)
+                                .aspectRatio(3 / 2, contentMode: .fill)
+                                .frame(maxWidth: .infinity, maxHeight: getRect().height * 0.3)
                                 .edgesIgnoringSafeArea([.top, .horizontal])
                         default:
-                            Image("sea_cloudy") //make this dynamic
+                            Image("sea_cloudy")
                                 .resizable()
-                                .aspectRatio(3 / 2, contentMode: .fit)
-                                .frame(maxWidth: .infinity)
+                                .aspectRatio(3 / 2, contentMode: .fill)
+                                .frame(maxWidth: .infinity, maxHeight: getRect().height * 0.3)
                                 .edgesIgnoringSafeArea([.top, .horizontal])
-                            
-                            
                     }
-                    HStack {
-                        iconView(currentWeather.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n min", currentWeather.main.tempMin))
-                        
-                        Spacer()
-                        
-                        iconView(currentWeather.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n current", currentWeather.main.temp))
-                        
-                        Spacer()
-                        
-                        iconView(currentWeather.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n max", currentWeather.main.tempMax))
-                    }
-                    .padding()
                     
-                    LabelledDivider(label: "", horizontalPadding: -10, color: .white)
+                    Spacer()
+                }
+                .frame(maxWidth: getRect().width, maxHeight: getRect().height)
+                
+                VStack {
+                    Spacer ()
                     
-                    RowView(weatherViewModel: weatherViewModel)
-                } else {
                     VStack {
-                        ErrorView(error: APIError.unknown){weatherViewModel.getForecast()}
-                        PlaceholderImageView()
+                        HStack {
+                            iconView(weatherList.first!.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n min", weatherList.first!.main.tempMin))
+                            
+                            Spacer()
+                            
+                            iconView(weatherList.first!.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n current", weatherList.first!.main.temp))
+                            
+                            Spacer()
+                            
+                            iconView(weatherList.first!.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n max", weatherList.first!.main.tempMax))
+                        }
+                        .padding()
+                        
+                        LabelledDivider(label: "", horizontalPadding: -10, color: .white)
+                        
+                        ForEach(weatherList) { list in
+                            HStack(spacing: 0) {
+                                Text(dayName(list.dt))
+                                    .padding(.leading)
+                                
+                                Spacer().frame(maxWidth: 500)
+                                
+                                iconView(list.weather[0].main)
+                                    .padding(.horizontal)
+                                
+                                Spacer().frame(minWidth: 0)
+                                
+                                Text(String.localizedStringWithFormat("%.0f°", list.main.tempMax))
+                                    .padding(.trailing)
+                            }
+                        }
+                    }
+                    .frame(maxWidth: getRect().width, maxHeight: getRect().height * 0.55, alignment: .top)
+                    //background here
+                    .background {
+                        switch weatherList.first?.weather.first?.main {
+                            case let name where name == "Clear" :
+                                Color.blue
+                            case let name where name == "Rain" :
+                                Color("rainy")
+                            default:
+                                Color("cloudy")
+                        }
                     }
                 }
+                .frame(maxWidth: getRect().width, maxHeight: getRect().height)
+            }
+            .frame(maxWidth: getRect().width, maxHeight: getRect().height)
+            .background {
+                switch weatherList.first?.weather.first?.main {
+                    case let name where name == "Clear" :
+                        Color.blue
+                    case let name where name == "Rain" :
+                        Color("rainy")
+                    default:
+                        Color("cloudy")
+                }
+            }
+        } else {
+            VStack {
+                ErrorView(error: APIError.unknown){weatherViewModel.getForecast()}
+                PlaceholderImageView()
             }
         }
-
+        
     }
 }
 
@@ -159,8 +204,8 @@ struct RequestLocationView: View {
                     view
                         .animatableGradient(fromGradient: backgroundGradient2, toGradient: backgroundGradient, progress: progress)
                 })
-                .ignoresSafeArea()
-                .onAppear {
+                    .ignoresSafeArea()
+                    .onAppear {
                     withAnimation(.linear(duration: 5.0).repeatCount(2,autoreverses: true)) {
                         self.progress = 1.0
                     }
@@ -175,6 +220,7 @@ struct RequestLocationView: View {
                     .resizable()
                     .frame(width: 100, height: 100, alignment: .center)
                     .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                    .padding()
                 Button(action: {
                     locationViewModel.requestPermission()
                 }, label: {
@@ -188,6 +234,7 @@ struct RequestLocationView: View {
                     .multilineTextAlignment(.center)
                     .foregroundColor(.white)
                     .font(.caption)
+                    .padding()
             }
             .modifier(FlatGlassView())
             .onTapGesture {
