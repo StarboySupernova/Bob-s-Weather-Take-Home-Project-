@@ -68,7 +68,6 @@ struct WeatherSuccess : View {
     var body: some View {
         if let weatherList = forecastResultStrip(forecast: forecast) {
             ZStack {
-                let _ = print(forecastMinMax(forecast: forecast))
                 VStack {
                     switch weatherList.first?.weather.first?.main {
                         case let name where name == "Clear" :
@@ -99,8 +98,9 @@ struct WeatherSuccess : View {
                     Spacer ()
                     
                     VStack {
+                        let minMax = forecastMinMax(forecast: forecast)
                         HStack {
-                            iconView(weatherList.first!.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n min", weatherList.first!.main.tempMin))
+                            iconView(weatherList.first!.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n min", minMax?.min ?? weatherList.first!.main.tempMin))
                             
                             Spacer()
                             
@@ -108,11 +108,13 @@ struct WeatherSuccess : View {
                             
                             Spacer()
                             
-                            iconView(weatherList.first!.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n max", weatherList.first!.main.tempMax))
+                            iconView(weatherList.first!.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n max", minMax!.max /*weatherList.first!.main.tempMax*/))
                         }
                         .padding(.horizontal)
                         
                         LabelledDivider(label: "", horizontalPadding: -10, color: .white)
+                            .glow(color: .white, radius: 1)
+                            .frame(maxWidth : getRect().width)
                         
                         ForEach(weatherList) { list in
                             HStack(spacing: 0) {

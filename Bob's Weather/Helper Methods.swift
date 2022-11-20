@@ -35,31 +35,36 @@ func forecastResultStrip(forecast: Forecast) -> [WeatherList]? {
     return res
 }
 
-func forecastMinMax(forecast: Forecast) -> WeatherList? {
-    let currentWeatherTime = forecast.list.first {
-        Date(timeIntervalSince1970: TimeInterval($0.dt)) > Date.now
-    }
-    
-    guard currentWeatherTime != nil else {
-        return nil
-    }
-    
-    let finalDaysWeatherTime = forecast.list.first {
-        $0.dtTxt.contains("00:00:00")
-    }
+func forecastMinMax(forecast: Forecast) -> (min :Double, max: Double)? {
+    var maxArray : [Double] = []
+    var minArray : [Double] = []
     
     let index = forecast.list.firstIndex {
         Date(timeIntervalSince1970: TimeInterval($0.dt)) > Date.now
     }
     
     let finalIndex = forecast.list.firstIndex {
-        $0.dtTxt.contains("00:00:00")
+        //$0.dtTxt.contains("00:00:00") //not producing expected results
+        Date(timeIntervalSince1970: TimeInterval($0.dt)) < Calendar.current.date(byAdding: DateComponents(hour: 24), to: Date.now) ?? Date.now
     }
     
     guard index != nil, finalIndex != nil else {
         return nil
     }
     
+    for max in forecast.list[index!...finalIndex!] {
+        maxArray.append(max.main.tempMax)
+    }
+    
+    for min in forecast.list[index!...finalIndex!] {
+        minArray.append(min.main.tempMin)
+    }
+    
+    let max = maxArray.max()
+    let min = minArray.min()
+    
+    //not producing expected results, have no choice but to iterate over the array slice
+    /*
     let max = forecast.list[index!...finalIndex!].max { a, b in
         a.main.tempMax < b.main.tempMax
     }
@@ -67,9 +72,11 @@ func forecastMinMax(forecast: Forecast) -> WeatherList? {
     let min = forecast.list[index!...finalIndex!].max { a, b in
         a.main.tempMax > b.main.tempMax
     }
+     */
     
-    print("this is max temperature", max?.main.tempMax)
-    //print("This is final day's time", finalDaysWeatherTime?.dtTxt)
-    
-    return finalDaysWeatherTime
+    guard max != nil, min != nil else {
+        return nil
+    }
+
+    return (min!, max!)
 }
