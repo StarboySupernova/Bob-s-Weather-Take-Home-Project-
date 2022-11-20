@@ -35,12 +35,12 @@ struct WeatherServiceImplementation: WeatherService {
                     let jsonDecoder = JSONDecoder()
                     jsonDecoder.dateDecodingStrategy = .iso8601 //the format dates are usually in
                     
-                    return Just(data)
+                    return Just(data) //Just selected here to ensure single emission
                         .decode(type: Forecast.self, decoder: jsonDecoder)
                         .mapError { _ in
                             APIError.decodingError
                         }
-                        .print()
+                        //.print()
                         .eraseToAnyPublisher()
                 } else {
                     return Fail(error: APIError.errorCode(response.statusCode)).eraseToAnyPublisher()

@@ -35,6 +35,7 @@ struct FavouritesListView: View {
                 Spacer()
                 
                 Button {
+                    LocationViewModel.customLocation = nil
                     favourites.refresh()
                     print(favourites.favouriteCities.count)
                 } label: {
@@ -47,6 +48,7 @@ struct FavouritesListView: View {
         .padding(.top, safeArea().top)
         .onAppear {
             //favourites.refresh()
+            LocationViewModel.customLocation = nil
         }
     }
 }

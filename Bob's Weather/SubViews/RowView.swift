@@ -27,7 +27,7 @@ struct RowView: View {
         .onAppear {
             weatherViewModel.getForecast()
         }
-    }
+    }    
 }
 
 struct Row: View {
@@ -125,8 +125,12 @@ struct FavouritesSuccessView: View {
         case let maindesc where maindesc == "Clear" :
             Label{
                 Text(label)
+                    .font(.body)
+                    .fontWeight(.ultraLight)
                     .multilineTextAlignment(.center)
-                    .foregroundColor(.green)
+                    .foregroundColor(.white)
+                    .glow(color: .white, radius: 1)
+                    .shadow(color: .black, radius: 1, x: 1, y: 1)
             } icon: {
                 Image("clear")
                     .resizable()
@@ -137,7 +141,10 @@ struct FavouritesSuccessView: View {
         case let maindesc where maindesc == "Rain":
             Label{
                 Text(label)
+                    .font(.body)
+                    .fontWeight(.ultraLight)
                     .multilineTextAlignment(.center)
+                    .foregroundColor(.white)
             } icon: {
                 Image("rain")
                     .resizable()
@@ -148,7 +155,10 @@ struct FavouritesSuccessView: View {
         default:
             Label{
                 Text(label)
+                    .font(.body)
+                    .fontWeight(.ultraLight)
                     .multilineTextAlignment(.center)
+                    .foregroundColor(.white)
             } icon: {
                 Image("partlysunny")
                     .resizable()
