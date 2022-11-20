@@ -68,6 +68,7 @@ struct WeatherSuccess : View {
     var body: some View {
         if let weatherList = forecastResultStrip(forecast: forecast) {
             ZStack {
+                let _ = print(forecastMinMax(forecast: forecast))
                 VStack {
                     switch weatherList.first?.weather.first?.main {
                         case let name where name == "Clear" :
@@ -79,14 +80,14 @@ struct WeatherSuccess : View {
                         case let name where name == "Rain" :
                             Image("sea_rainy")
                                 .resizable()
-                                .aspectRatio(3 / 2, contentMode: .fill)
-                                .frame(maxWidth: .infinity, maxHeight: getRect().height * 0.3)
+                                //.aspectRatio(3 / 2, contentMode: .fill)
+                                .frame(maxWidth: getRect().width, maxHeight: getRect().height * 0.4)
                                 .edgesIgnoringSafeArea([.top, .horizontal])
                         default:
                             Image("sea_cloudy")
                                 .resizable()
-                                .aspectRatio(3 / 2, contentMode: .fill)
-                                .frame(maxWidth: .infinity, maxHeight: getRect().height * 0.3)
+                                //.aspectRatio(3 / 2, contentMode: .fill)
+                                .frame(maxWidth: getRect().width, maxHeight: getRect().height * 0.4)
                                 .edgesIgnoringSafeArea([.top, .horizontal])
                     }
                     
@@ -109,7 +110,7 @@ struct WeatherSuccess : View {
                             
                             iconView(weatherList.first!.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n max", weatherList.first!.main.tempMax))
                         }
-                        .padding()
+                        .padding(.horizontal)
                         
                         LabelledDivider(label: "", horizontalPadding: -10, color: .white)
                         
