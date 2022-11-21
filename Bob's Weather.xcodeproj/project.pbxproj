@@ -28,6 +28,8 @@
 		903E570728EF9B37009A40CD /* HeroPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903E570628EF9B37009A40CD /* HeroPageView.swift */; };
 		90478F0928C532E9006310E4 /* LabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90478F0828C532E9006310E4 /* LabelStyle.swift */; };
 		90484BFB28E5158C00283D4A /* LocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90484BFA28E5158C00283D4A /* LocationViewModel.swift */; };
+		90494F96292B2F9800955009 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 90494F95292B2F9800955009 /* FirebaseFirestore */; };
+		90494F98292B2F9800955009 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 90494F97292B2F9800955009 /* FirebaseStorage */; };
 		9049703028D2B68C00E36CD1 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049702F28D2B68C00E36CD1 /* ErrorView.swift */; };
 		9055755C28DEA78600994CF9 /* LabelledDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9055755B28DEA78600994CF9 /* LabelledDivider.swift */; };
 		9061456728C954F500CB4CF9 /* ExtensionOnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9061456628C954F500CB4CF9 /* ExtensionOnView.swift */; };
@@ -46,6 +48,7 @@
 		909E7D1A28D1C51900A380DF /* FavouritesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909E7D1928D1C51900A380DF /* FavouritesListView.swift */; };
 		909E7D1C28D1CACB00A380DF /* RowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909E7D1B28D1CACB00A380DF /* RowView.swift */; };
 		90BDE98628F4EF2C00ADAD47 /* Locator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BDE98528F4EF2C00ADAD47 /* Locator.swift */; };
+		90BECBE2292B2E8A005B7385 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 90BECBE1292B2E8A005B7385 /* GoogleService-Info.plist */; };
 		90C2611B28C97E3F00B8538C /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C2611A28C97E3F00B8538C /* PageViewController.swift */; };
 		90C5263C28F622D300F3B60D /* Corners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C5263B28F622D300F3B60D /* Corners.swift */; };
 		90E4CD9628CBDF6200DEB11A /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E4CD9528CBDF6200DEB11A /* PageControl.swift */; };
@@ -97,6 +100,7 @@
 		909E7D1928D1C51900A380DF /* FavouritesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesListView.swift; sourceTree = "<group>"; };
 		909E7D1B28D1CACB00A380DF /* RowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowView.swift; sourceTree = "<group>"; };
 		90BDE98528F4EF2C00ADAD47 /* Locator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Locator.swift; sourceTree = "<group>"; };
+		90BECBE1292B2E8A005B7385 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		90C2611A28C97E3F00B8538C /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 		90C5263B28F622D300F3B60D /* Corners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Corners.swift; sourceTree = "<group>"; };
 		90E4CD9528CBDF6200DEB11A /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
@@ -111,6 +115,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90494F96292B2F9800955009 /* FirebaseFirestore in Frameworks */,
+				90494F98292B2F9800955009 /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				9007DFC028F2545C00591047 /* Bob-s-Weather-Info.plist */,
+				90BECBE1292B2E8A005B7385 /* GoogleService-Info.plist */,
 				908370CD292995CF0000D879 /* Helper Methods.swift */,
 				9061457128C964F000CB4CF9 /* Shapes */,
 				9061456828C9567B00CB4CF9 /* Modifiers */,
@@ -299,6 +306,10 @@
 			dependencies = (
 			);
 			name = "Bob's Weather";
+			packageProductDependencies = (
+				90494F95292B2F9800955009 /* FirebaseFirestore */,
+				90494F97292B2F9800955009 /* FirebaseStorage */,
+			);
 			productName = "Bob's Weather";
 			productReference = 90100A0C28C2D40500C1104D /* Bob's Weather.app */;
 			productType = "com.apple.product-type.application";
@@ -327,6 +338,9 @@
 				Base,
 			);
 			mainGroup = 90100A0328C2D40500C1104D;
+			packageReferences = (
+				90494F94292B2F9800955009 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 90100A0D28C2D40500C1104D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -343,6 +357,7 @@
 			files = (
 				90100A1728C2D40600C1104D /* Preview Assets.xcassets in Resources */,
 				90100A1428C2D40600C1104D /* Assets.xcassets in Resources */,
+				90BECBE2292B2E8A005B7385 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -529,6 +544,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Bob-s-Weather-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Bob's Weather needs location access to display the weather in your area";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -561,6 +577,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Bob-s-Weather-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Bob's Weather needs location access to display the weather in your area";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -603,6 +620,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		90494F94292B2F9800955009 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		90494F95292B2F9800955009 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90494F94292B2F9800955009 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		90494F97292B2F9800955009 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90494F94292B2F9800955009 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 90100A0428C2D40500C1104D /* Project object */;
 }
