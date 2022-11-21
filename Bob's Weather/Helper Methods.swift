@@ -19,7 +19,7 @@ func forecastResultStrip(forecast: Forecast) -> [WeatherList]? {
         return nil
     }
     
-    for i in stride(from: TimeInterval(currentWeatherTime!.dt), through: Date(timeIntervalSince1970: TimeInterval(currentWeatherTime!.dt + 432000)).timeIntervalSince1970, by: 86400) {
+    for i in stride(from: TimeInterval(currentWeatherTime!.dt), through: Date(timeIntervalSince1970: TimeInterval(currentWeatherTime!.dt + 432_000)).timeIntervalSince1970, by: 86_400) {
         times.append(Int(i))
     }
     //print("this is times now",times)
