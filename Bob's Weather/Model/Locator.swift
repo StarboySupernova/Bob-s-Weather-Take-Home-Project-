@@ -20,10 +20,3 @@ struct Locator: Hashable, Codable, Identifiable {
     var latitude: Double
     var longitude: Double
 }
-
-struct PlainLocator {
-    var id : UUID
-    var name: String
-    var latitude : Double
-    var longitude : Double
-}
