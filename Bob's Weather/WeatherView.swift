@@ -73,19 +73,19 @@ struct WeatherSuccess : View {
                         case let name where name == "Clear" :
                             Image("sea_sunny")
                                 .resizable()
-                                //.aspectRatio(contentMode: .fill)
+                            //.aspectRatio(contentMode: .fill)
                                 .frame(maxWidth: getRect().width, maxHeight: getRect().height * 0.4)
                                 .edgesIgnoringSafeArea([.top, .horizontal])
                         case let name where name == "Rain" :
                             Image("sea_rainy")
                                 .resizable()
-                                //.aspectRatio(3 / 2, contentMode: .fill)
+                            //.aspectRatio(3 / 2, contentMode: .fill)
                                 .frame(maxWidth: getRect().width, maxHeight: getRect().height * 0.4)
                                 .edgesIgnoringSafeArea([.top, .horizontal])
                         default:
                             Image("sea_cloudy")
                                 .resizable()
-                                //.aspectRatio(3 / 2, contentMode: .fill)
+                            //.aspectRatio(3 / 2, contentMode: .fill)
                                 .frame(maxWidth: getRect().width, maxHeight: getRect().height * 0.4)
                                 .edgesIgnoringSafeArea([.top, .horizontal])
                     }
@@ -100,6 +100,8 @@ struct WeatherSuccess : View {
                     VStack {
                         let minMax = forecastMinMax(forecast: forecast)
                         HStack {
+                            //unexpected behaviour for min and max temperatures for the day. will look into purchasing license for 16 day forecast API
+                            //minMax and weatherList.first.main produce the same values
                             iconView(weatherList.first!.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n min", minMax?.min ?? weatherList.first!.main.tempMin))
                             
                             Spacer()
@@ -108,7 +110,7 @@ struct WeatherSuccess : View {
                             
                             Spacer()
                             
-                            iconView(weatherList.first!.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n max", minMax!.max /*weatherList.first!.main.tempMax*/))
+                            iconView(weatherList.first!.weather.first!.main, label: String.localizedStringWithFormat("%.0f° \n max", minMax?.max ?? weatherList.first!.main.tempMax))
                         }
                         .padding(.horizontal)
                         
@@ -121,16 +123,17 @@ struct WeatherSuccess : View {
                                 Text(dayName(list.dt))
                                     .padding(.leading)
                                 
-                                Spacer().frame(maxWidth: 500)
+                                Spacer()//.frame(maxWidth: 500)
                                 
                                 iconView(list.weather[0].main)
                                     .padding(.horizontal)
                                 
-                                Spacer().frame(minWidth: 0)
+                                Spacer()//.frame(minWidth: 0)
                                 
                                 Text(String.localizedStringWithFormat("%.0f°", list.main.tempMax))
                                     .padding(.trailing)
                             }
+                            .frame(maxWidth: getRect().width)
                         }
                     }
                     .frame(maxWidth: getRect().width, maxHeight: getRect().height * 0.55, alignment: .top)

@@ -27,7 +27,7 @@ struct RowView: View {
         .onAppear {
             weatherViewModel.getForecast()
         }
-    }    
+    }
 }
 
 struct Row: View {
@@ -62,20 +62,20 @@ struct Row: View {
                 if favouritesViewModel.contains(city) {
                     showingSheet.toggle()
                 } else {
-                let location = Locator(name: city, latitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.latitude)!, longitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.longitude)!)
-                               favouritesViewModel.add(location)
-                showingSheet.toggle()
+                    let location = Locator(name: city, latitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.latitude)!, longitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.longitude)!)
+                    favouritesViewModel.add(location)
+                    showingSheet.toggle()
                 }
             } else {
                 showingError.toggle()
             }
             /*if let city = LocationViewModel.shared.currentPlacemark?.locality {
-                let location = Locator(name: city, latitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.latitude)!, longitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.longitude)!)
-                favouritesViewModel.add(location)
-                showingSheet.toggle()
-            } else {
-                showingError.toggle()
-            }*/
+             let location = Locator(name: city, latitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.latitude)!, longitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.longitude)!)
+             favouritesViewModel.add(location)
+             showingSheet.toggle()
+             } else {
+             showingError.toggle()
+             }*/
         }
         .sheet(isPresented: $showingSheet) {
             showingSheet = false
@@ -108,7 +108,7 @@ struct FavouritesSuccessView: View {
                             .foregroundColor(.white)
                     }
                 }
-
+                
                 Button {
                     dismiss()
                 } label: {
@@ -151,7 +151,7 @@ struct FavouritesSuccessView: View {
                     .scaledToFit()
             }
             .labelStyle(CaptionLabelStyle())
-
+            
         default:
             Label{
                 Text(label)
@@ -179,11 +179,11 @@ struct PlaceholderImageView: View {
 }
 
 func dayName(_ unixValue: Int) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE"
-        let date = Date(timeIntervalSince1970: TimeInterval(unixValue))
-        dateFormatter.timeZone = .current
-        return dateFormatter.string(from: date)
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "EEEE"
+    let date = Date(timeIntervalSince1970: TimeInterval(unixValue))
+    dateFormatter.timeZone = .current
+    return dateFormatter.string(from: date)
 }
 
 struct RowView_Previews: PreviewProvider {
