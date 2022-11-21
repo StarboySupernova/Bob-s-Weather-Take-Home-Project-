@@ -17,8 +17,9 @@ struct Intro: Identifiable {
 }
 
 var intros: [Intro] = [
-    Intro(image: "sun.haze.fill", title: "Welcome to Bob's Weather", description: "Pretoria : 23°C", color: .mint),
-    Intro(image: "cloud.sun.rain.fill", title: "Weather at your fingertips", description: "Jakarta: 9°C", color: .brown),
-    Intro(image: "cloud.sun.bolt.fill", title: "Worldwide Coverage", description: "Reykjavik: -17°C", color: .yellow),
+    Intro(image: "weather1", title: "Welcome to Bob's Weather", description: "Pretoria : 23°C, partly cloudy", color: .teal),
+    Intro(image: "weather2", title: "Weather at your fingertips", description: "Jakarta: 9°C, fog & light drizzle", color: .indigo),
+    Intro(image: "weather3", title: "Worldwide Coverage in RealTime", description: "Reykjavik: -17°C, heavy snow", color: .gray),
+    Intro(image: "weather3", title: "Worldwide Coverage in RealTime", description: "Reykjavik: -17°C, heavy snow", color: .gray),
 ]
 

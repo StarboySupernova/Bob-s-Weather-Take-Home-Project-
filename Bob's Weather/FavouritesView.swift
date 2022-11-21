@@ -52,8 +52,6 @@ struct TextOverlay: View {
                 .padding()
             }
             .foregroundColor(.white)
-            
-            
         }
     }
 }
