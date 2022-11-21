@@ -51,6 +51,7 @@
 		90BECBE2292B2E8A005B7385 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 90BECBE1292B2E8A005B7385 /* GoogleService-Info.plist */; };
 		90C2611B28C97E3F00B8538C /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C2611A28C97E3F00B8538C /* PageViewController.swift */; };
 		90C5263C28F622D300F3B60D /* Corners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C5263B28F622D300F3B60D /* Corners.swift */; };
+		90C7B2F6292C23AC00262513 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 90C7B2F5292C23AC00262513 /* FirebaseFirestoreSwift */; };
 		90E4CD9628CBDF6200DEB11A /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E4CD9528CBDF6200DEB11A /* PageControl.swift */; };
 		90E5163B28CAA85E008C370C /* FavouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E5163A28CAA85E008C370C /* FavouritesView.swift */; };
 		90E5163D28CAAAA4008C370C /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E5163C28CAAAA4008C370C /* PageView.swift */; };
@@ -117,6 +118,7 @@
 			files = (
 				90494F96292B2F9800955009 /* FirebaseFirestore in Frameworks */,
 				90494F98292B2F9800955009 /* FirebaseStorage in Frameworks */,
+				90C7B2F6292C23AC00262513 /* FirebaseFirestoreSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,6 +130,7 @@
 			children = (
 				90100A0E28C2D40500C1104D /* Bob's Weather */,
 				90100A0D28C2D40500C1104D /* Products */,
+				90C7B2F4292C23AC00262513 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -290,6 +293,13 @@
 			path = Shapes;
 			sourceTree = "<group>";
 		};
+		90C7B2F4292C23AC00262513 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -309,6 +319,7 @@
 			packageProductDependencies = (
 				90494F95292B2F9800955009 /* FirebaseFirestore */,
 				90494F97292B2F9800955009 /* FirebaseStorage */,
+				90C7B2F5292C23AC00262513 /* FirebaseFirestoreSwift */,
 			);
 			productName = "Bob's Weather";
 			productReference = 90100A0C28C2D40500C1104D /* Bob's Weather.app */;
@@ -627,7 +638,7 @@
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 8.0.0;
+				minimumVersion = 9.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -642,6 +653,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 90494F94292B2F9800955009 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		90C7B2F5292C23AC00262513 /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90494F94292B2F9800955009 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

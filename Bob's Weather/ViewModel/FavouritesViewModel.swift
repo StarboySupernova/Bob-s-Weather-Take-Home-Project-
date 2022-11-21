@@ -9,6 +9,7 @@ import Foundation
 import CoreLocation
 import SwiftUI
 import Firebase
+import FirebaseFirestoreSwift
 
 class FavouritesViewModel: ObservableObject {
     // the actual locations the user has favourited
@@ -127,6 +128,44 @@ class FavouritesViewModel: ObservableObject {
         let db = Firestore.firestore()
         let docRef = db.collection("Favourites").document(deviceID)
         
+        docRef.setData(["deviceID" : deviceID]) { err in
+            if let err = err {
+                print("Error writing document: \(err)")
+            } else {
+                print("Document successfully written!")
+            }
+        }
+        
+        for loc in locator {
+            let locatorValue = loc
+            let encoded : [String: Any]
+            do {
+                //encode the swift struct instance into a dictionary using the Firestore encoder
+                encoded = try Firestore.Encoder().encode(locatorValue)
+            } catch {
+                //encoding error
+                showErrorAlertView("Encoding Error", error.localizedDescription, handler: {})
+                return
+            }
+            
+            let fieldKey = "favouriteLocations"
+            
+            // add a new item to the "favouriteLocations" array
+            docRef.updateData([fieldKey : FieldValue.arrayUnion([encoded])]) { error in
+                guard let error = error else {
+                    //no error thrown
+                    showSuccessAlertView("✔️", "Successfully added to remote server") {}
+                    print("Document added with id: \(docRef.documentID)")
+                    return
+                }
+                
+                //firestore error thrown
+                showErrorAlertView("Firestore error", error.localizedDescription, handler: {})
+            }
+        }
+
+        
+       /*
         docRef.getDocument { document, error in
             if let document = document, document.exists {
                 docRef.setData(["deviceID" : deviceID, "favouriteLocations" : locator], mergeFields: ["favouriteLocations"])
@@ -136,8 +175,10 @@ class FavouritesViewModel: ObservableObject {
                 print("Document does not exist")
             }
         }
-        
-        docRef.setData(["deviceID" : deviceID, "favouriteLocations" : locator]) { error in
+        */
+                
+        //need to decode Locator struct so this will not work
+        /*docRef.setData(["deviceID" : deviceID, "favouriteLocations" : locator]) { error in
             if let err = error {
                 showErrorAlertView("Error adding document", err.localizedDescription) {}
                 print("Error adding document: \(err)")
@@ -145,7 +186,7 @@ class FavouritesViewModel: ObservableObject {
                 showSuccessAlertView("✔️", "Success") {}
                 print("Document added with id: \(docRef.documentID)")
             }
-        }
+        }*/
     }
     
     func clearLocation(id deviceID: String, locator : Locator) {
