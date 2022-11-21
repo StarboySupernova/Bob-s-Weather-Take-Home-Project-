@@ -8,27 +8,37 @@
 import Foundation
 import CoreLocation
 import SwiftUI
+import Firebase
 
 class FavouritesViewModel: ObservableObject {
     // the actual locations the user has favourited
     @Published var favouriteCities: Set<Locator>
-        
+    
     // the key we're using to read/write in UserDefaults
     private let saveKey = "Favoured"
     
     init() {
         favouriteCities = []
-        // load our saved data
-        
-        /*if let data = UserDefaults.standard.data(forKey: saveKey) {
-            if let decoded = try? JSONDecoder().decode(Set<Locator>.self, from: data) {
-                self.favouriteCities = decoded
+        let token = deviceToken()
+        if token != nil {
+            getLocationData(id: token!)
+        } else {
+            // load our saved data
+            
+            /*if let data = UserDefaults.standard.data(forKey: saveKey) {
+             if let decoded = try? JSONDecoder().decode(Set<Locator>.self, from: data) {
+             self.favouriteCities = decoded
+             }
+             }*/
+
+            //show error alert could not find token
+            showErrorAlertView("Error", "Could not find token") {}
+            do {
+                favouriteCities = try UserDefaults.standard.getObject(forKey: saveKey, castTo: Set<Locator>.self)
+            } catch {
+                showErrorAlertView("Error", error.localizedDescription) {}
+                print(error.localizedDescription)
             }
-        }*/
-        do {
-            favouriteCities = try UserDefaults.standard.getObject(forKey: saveKey, castTo: Set<Locator>.self)
-        } catch {
-            print(error.localizedDescription)
         }
     }
     
@@ -62,10 +72,18 @@ class FavouritesViewModel: ObservableObject {
     }
     
     func add(_ city: Locator) {
+        var location : [Locator] = []
         objectWillChange.send()
         favouriteCities.insert(city)
         //favouriteCities.append(city)
+        location.append(city)
         save()
+        guard let token = deviceToken() else {
+            //show error alert
+            showErrorAlertView("Unable to add to remote server", "Device token not found") {}
+            return
+        }
+        uploadLocation(id: token, locator: location)
     }
     
     // removes the city from our set, updates all views, and saves the change
@@ -74,6 +92,13 @@ class FavouritesViewModel: ObservableObject {
             objectWillChange.send()
             favouriteCities.remove(at: removed)
             save()
+            let removedLocation = favouriteCities.first(where: {$0.name == city})
+            guard let token = deviceToken(), removedLocation != nil else {
+                //show error
+                showErrorAlertView("Unable to remove from remote server", "Device token not found") {}
+                return
+            }
+            deleteLocation(id: token, locator: removedLocation!)
         }
     }
     
@@ -86,8 +111,8 @@ class FavouritesViewModel: ObservableObject {
         }
         
         /* if let data = try? JSONEncoder().encode(favouriteCities) {
-            UserDefaults.standard.setObject(data, forKey: saveKey)
-        }*/
+         UserDefaults.standard.setObject(data, forKey: saveKey)
+         }*/
     }
     
     func refresh(){
@@ -95,6 +120,91 @@ class FavouritesViewModel: ObservableObject {
             favouriteCities = try UserDefaults.standard.getObject(forKey: saveKey, castTo: Set<Locator>.self)
         } catch {
             print(error.localizedDescription)
+        }
+    }
+    
+    func uploadLocation(id deviceID: String, locator : [Locator]) {
+        let db = Firestore.firestore()
+        let docRef = db.collection("Favourites").document(deviceID)
+        
+        docRef.getDocument { document, error in
+            if let document = document, document.exists {
+                docRef.setData(["deviceID" : deviceID, "favouriteLocations" : locator], mergeFields: ["favouriteLocations"])
+                //show success alert
+                showErrorAlertView("Success", "Data succesfully added to remote server") {}
+            } else {
+                print("Document does not exist")
+            }
+        }
+        
+        docRef.setData(["deviceID" : deviceID, "favouriteLocations" : locator]) { error in
+            if let err = error {
+                showErrorAlertView("Error adding document", err.localizedDescription) {}
+                print("Error adding document: \(err)")
+            } else {
+                showSuccessAlertView("✔️", "Success") {}
+                print("Document added with id: \(docRef.documentID)")
+            }
+        }
+    }
+    
+    func clearLocation(id deviceID: String, locator : Locator) {
+        let db = Firestore.firestore()
+        let docRef = db.collection("Favourites").document(deviceID)
+        
+        docRef.updateData(["favouriteLocations" : FieldValue.delete()]) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("Document successfully updated")
+            }
+        }
+    }
+    
+    func deleteLocation(id deviceID: String, locator : Locator) {
+        let db = Firestore.firestore()
+        let docRef = db.collection("Favourites").document(deviceID)
+        
+        docRef.updateData(["favouriteLocations" :FieldValue.arrayRemove([locator])]) { error in
+            if let err = error {
+                showErrorAlertView("Error updating document", err.localizedDescription) {}
+                print("Error updating document: \(err)")
+            } else {
+                showSuccessAlertView("Success", "Document successfully updated") {}
+                print("Document successfully updated")
+            }
+        }
+    }
+    
+    func getLocationData(id deviceID: String) {
+        let db = Firestore.firestore()
+        
+        db.collection("Favourites").document(deviceID).getDocument { document, error in
+            guard error == nil else {
+                //show error view
+                showErrorAlertView("Error", error!.localizedDescription) {}
+                return
+            }
+            
+            if let document = document, document.exists {
+                let data = document.data()
+                if let data = data {
+                    print("data", data)
+                    let favouritesFound = data["favouriteLocations"] as? [Locator]
+                    if favouritesFound != nil {
+                        self.favouriteCities = Set(favouritesFound!)
+                    } else {
+                        //show error
+                        showErrorAlertView("Error", "Could not cast to favourites") {}
+                    }
+                } else {
+                    //show error
+                    showErrorAlertView("Error", "Data does not exist") {}
+                }
+            } else {
+                //show error
+                showErrorAlertView("Error", "Document does not exist", handler: {})
+            }
         }
     }
 }

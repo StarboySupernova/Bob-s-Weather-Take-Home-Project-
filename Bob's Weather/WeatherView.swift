@@ -59,6 +59,8 @@ struct WeatherView: View {
 
 struct WeatherSuccess : View {
     @EnvironmentObject var weatherViewModel: WeatherViewModelImplementation
+    @EnvironmentObject var favouritesViewModel: FavouritesViewModel
+    @State private var showingSheet: Bool = false
     var forecast: Forecast
     
     init(forecast : Forecast) {
@@ -93,6 +95,32 @@ struct WeatherSuccess : View {
                     Spacer()
                 }
                 .frame(maxWidth: getRect().width, maxHeight: getRect().height)
+                .overlay(alignment: .topTrailing) {
+                    Button {
+                        if /*LocationViewModel.shared.lastSeenLocation != nil*/ let city = LocationViewModel.shared.currentPlacemark?.locality {
+                            //locationViewModel.addFavourite()
+                            if favouritesViewModel.contains(city) {
+                                showingSheet.toggle()
+                            } else {
+                                let location = Locator(name: city, latitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.latitude)!, longitude: (LocationViewModel.shared.lastSeenLocation?.coordinate.longitude)!)
+                                favouritesViewModel.add(location)
+                                showingSheet.toggle()
+                            }
+                        } else {
+                            showErrorAlertView("Error", "Could not add curremt location to remote server", handler: {})
+                        }
+
+                    } label: {
+                        Text("Add to Favourites")
+                            .foregroundColor(.white)
+                            .padding(5)
+                            .background {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.ultraThinMaterial)
+                            }
+                    }
+
+                }
                 
                 VStack {
                     Spacer ()
