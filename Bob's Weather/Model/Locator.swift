@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreLocation
+import FirebaseFirestoreSwift
 
 protocol ObjectSavable {
     func setObject<Object>(_ object: Object, forKey: String) throws where Object: Encodable
@@ -18,4 +19,11 @@ struct Locator: Hashable, Codable, Identifiable {
     var name: String
     var latitude: Double
     var longitude: Double
+}
+
+struct PlainLocator {
+    var id : UUID
+    var name: String
+    var latitude : Double
+    var longitude : Double
 }

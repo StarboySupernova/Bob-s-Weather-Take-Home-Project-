@@ -196,8 +196,10 @@ class FavouritesViewModel: ObservableObject {
         docRef.updateData(["favouriteLocations" : FieldValue.delete()]) { err in
             if let err = err {
                 print("Error updating document: \(err)")
+                showErrorAlertView("Error clearing your storage bucket", err.localizedDescription, handler: {})
             } else {
                 print("Document successfully updated")
+                showSuccessAlertView("✔️", "Storage bucket successfully cleared", handler: {})
             }
         }
     }
@@ -206,7 +208,19 @@ class FavouritesViewModel: ObservableObject {
         let db = Firestore.firestore()
         let docRef = db.collection("Favourites").document(deviceID)
         
-        docRef.updateData(["favouriteLocations" :FieldValue.arrayRemove([locator])]) { error in
+        let encoded : [String: Any]
+        do {
+            //encode the swift struct instance into a dictionary using the Firestore encoder
+            encoded = try Firestore.Encoder().encode(locator)
+        } catch {
+            //encoding error
+            showErrorAlertView("Encoding Error", error.localizedDescription, handler: {})
+            return
+        }
+        
+        let fieldKey = "favouriteLocations"
+        
+        docRef.updateData([fieldKey : FieldValue.arrayRemove([encoded])]) { error in
             if let err = error {
                 showErrorAlertView("Error updating document", err.localizedDescription) {}
                 print("Error updating document: \(err)")
@@ -219,8 +233,9 @@ class FavouritesViewModel: ObservableObject {
     
     func getLocationData(id deviceID: String) {
         let db = Firestore.firestore()
+        let docRef = db.collection("Favourites").document(deviceID)
         
-        db.collection("Favourites").document(deviceID).getDocument { document, error in
+        docRef.getDocument { document, error in
             guard error == nil else {
                 //show error view
                 showErrorAlertView("Error", error!.localizedDescription) {}
@@ -231,9 +246,25 @@ class FavouritesViewModel: ObservableObject {
                 let data = document.data()
                 if let data = data {
                     print("data", data)
-                    let favouritesFound = data["favouriteLocations"] as? [Locator]
+                    let favouritesFound = data["favouriteLocations"] as? Array<Any>
+                    print("favourites Found", favouritesFound)
                     if favouritesFound != nil {
-                        self.favouriteCities = Set(favouritesFound!)
+                        //self.favouriteCities = Set(favouritesFound!)
+                        do {
+                            /*
+                             let newfavouriteCities = try document.data(as: Locator.Type)
+                            print("newfavecities" , newfavouriteCities)
+                            self.favouriteCities = Set(arrayLiteral: newfavouriteCities)
+                            print("initialized cities", self.favouriteCities)
+                             */
+                            for i in favouritesFound! {
+                                let decoder = Firestore.Decoder()
+                                let decodedLocation = try decoder.decode(Locator.self, from: i, in: docRef)
+                                self.favouriteCities.insert(decodedLocation)
+                            }
+                        } catch {
+                            showErrorAlertView("Try catch error", error.localizedDescription, handler: {})
+                        }
                     } else {
                         //show error
                         showErrorAlertView("Error", "Could not cast to favourites") {}
