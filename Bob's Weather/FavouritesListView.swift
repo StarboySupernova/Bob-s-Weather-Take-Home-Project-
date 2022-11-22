@@ -12,6 +12,7 @@ struct FavouritesListView: View {
     @EnvironmentObject var favouritesViewModel: FavouritesViewModel
     @EnvironmentObject var weatherViewModel: WeatherViewModelImplementation
     @State private var showingCustom: Bool = false
+    @State private var cleared : Bool = false
     var body: some View {
         Group {
             VStack(spacing: 20) {
@@ -31,14 +32,33 @@ struct FavouritesListView: View {
                              .frame(maxWidth: getRect().width)*/
                             Section(header : SectionHeader(text: city.name)) {
                                 HStack {
-                                    Text("\(city.latitude)")
+                                 /*   Text("\(city.latitude)")
                                         .foregroundColor(.white)
                                         .fontWeight(.ultraLight)
                                     
                                     Text("\(city.longitude)")
                                         .foregroundColor(.white)
-                                        .fontWeight(.ultraLight)
+                                        .fontWeight(.ultraLight)*/
                                     
+                                    Button {
+                                        if let extractedCity = favouritesViewModel.first(occurring: city.name) {
+                                            guard let token = deviceToken() else {
+                                                showErrorAlertView("Error", "Could not initialize device token", handler: {})
+                                                return
+                                            }
+                                            
+                                            favouritesViewModel.deleteLocation(id: token, locator: extractedCity)
+                                        }
+                                    } label: {
+                                        Text("Delete")
+                                            .foregroundColor(.white)
+                                            .padding(5)
+                                            .background {
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .stroke(Color.red, lineWidth: 2)
+                                            }
+                                    }
+
                                     Spacer()
                                     
                                     Button {
@@ -47,7 +67,11 @@ struct FavouritesListView: View {
                                             if LocationViewModel.customLocation != nil {
                                                 weatherViewModel.getForecast()
                                                 showingCustom.toggle()
+                                            } else {
+                                                showErrorAlertView("Error", "Custom Location not initialized", handler: {})
                                             }
+                                        } else {
+                                            showErrorAlertView("Error", "Unable to extract city location", handler: {})
                                         }
                                     } label: {
                                         Text("Check Weather")
@@ -73,19 +97,6 @@ struct FavouritesListView: View {
                                         }
                                     }
                                 }
-                                .onTapGesture {
-                                    if let extractedCity = favouritesViewModel.first(occurring: city.name) {
-                                        LocationViewModel.locationProvider(latitude: extractedCity.latitude, longitude: extractedCity.longitude)
-                                        if LocationViewModel.customLocation != nil {
-                                            weatherViewModel.getForecast()
-                                            showingCustom.toggle()
-                                        } else {
-                                            showErrorAlertView("Error", "Custom Location not initialized", handler: {})
-                                        }
-                                    } else {
-                                        showErrorAlertView("Error", "Unable to extract city location", handler: {})
-                                    }
-                                }
                             }
                         }
                     }
@@ -94,15 +105,31 @@ struct FavouritesListView: View {
                 
                 Spacer()
                 
-                Button {
-                    LocationViewModel.customLocation = nil
-                    favouritesViewModel.refresh()
-                    //print(favourites.favouriteCities.count)
-                } label: {
-                    Text("Refresh")
-                        .foregroundColor(.white)
+                HStack(spacing: 30) {
+                    Button {
+                        LocationViewModel.customLocation = nil
+                        guard let token = deviceToken() else {
+                            showErrorAlertView("Error", "Could not initialize token", handler: {})
+                            return
+                        }
+                        favouritesViewModel.clearLocation(id: token)
+                        cleared = true
+                    } label: {
+                        Text("Clear all")
+                            .foregroundColor(.white)
+                    }
+                    
+                    Button {
+                        LocationViewModel.customLocation = nil
+                        favouritesViewModel.refresh()
+                        //print(favourites.favouriteCities.count)
+                    } label: {
+                        Text("Refresh")
+                            .foregroundColor(.white)
+                    }
+                    .opacity(cleared ? 0.2 : 1)
+                    .disabled(cleared ? true : false)
                 }
-                
             }
         }
         .padding(.top, safeArea().top)

@@ -178,7 +178,7 @@ class FavouritesViewModel: ObservableObject {
         }*/
     }
     
-    func clearLocation(id deviceID: String, locator : Locator) {
+    func clearLocation(id deviceID: String) {
         let db = Firestore.firestore()
         let docRef = db.collection("Favourites").document(deviceID)
         
@@ -255,7 +255,7 @@ class FavouritesViewModel: ObservableObject {
                 }
             } else {
                 //show error
-                showErrorAlertView("Error", "Document does not exist", handler: {})
+                //showErrorAlertView("Error", "Document does not exist", handler: {})
             }
         }
     }
