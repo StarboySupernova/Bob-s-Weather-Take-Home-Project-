@@ -109,6 +109,7 @@ class FavouritesViewModel: ObservableObject {
             try UserDefaults.standard.setObject(favouriteCities, forKey: saveKey)
         } catch {
             print(error.localizedDescription)
+            showErrorAlertView("Error saving to memory", error.localizedDescription, handler: {})
         }
         
         /* if let data = try? JSONEncoder().encode(favouriteCities) {
@@ -121,6 +122,7 @@ class FavouritesViewModel: ObservableObject {
             favouriteCities = try UserDefaults.standard.getObject(forKey: saveKey, castTo: Set<Locator>.self)
         } catch {
             print(error.localizedDescription)
+            showErrorAlertView("Status refresh error", error.localizedDescription, handler: {})
         }
     }
     
@@ -131,6 +133,7 @@ class FavouritesViewModel: ObservableObject {
         docRef.setData(["deviceID" : deviceID]) { err in
             if let err = err {
                 print("Error writing document: \(err)")
+                showErrorAlertView("Error", err.localizedDescription, handler: {})
             } else {
                 print("Document successfully written!")
             }
@@ -163,21 +166,7 @@ class FavouritesViewModel: ObservableObject {
                 showErrorAlertView("Firestore error", error.localizedDescription, handler: {})
             }
         }
-
-        
-       /*
-        docRef.getDocument { document, error in
-            if let document = document, document.exists {
-                docRef.setData(["deviceID" : deviceID, "favouriteLocations" : locator], mergeFields: ["favouriteLocations"])
-                //show success alert
-                showErrorAlertView("Success", "Data succesfully added to remote server") {}
-            } else {
-                print("Document does not exist")
-            }
-        }
-        */
-                
-        //need to decode Locator struct so this will not work
+        //need to encode Locator struct so this will not work
         /*docRef.setData(["deviceID" : deviceID, "favouriteLocations" : locator]) { error in
             if let err = error {
                 showErrorAlertView("Error adding document", err.localizedDescription) {}
@@ -245,18 +234,9 @@ class FavouritesViewModel: ObservableObject {
             if let document = document, document.exists {
                 let data = document.data()
                 if let data = data {
-                    print("data", data)
                     let favouritesFound = data["favouriteLocations"] as? Array<Any>
-                    print("favourites Found", favouritesFound)
                     if favouritesFound != nil {
-                        //self.favouriteCities = Set(favouritesFound!)
                         do {
-                            /*
-                             let newfavouriteCities = try document.data(as: Locator.Type)
-                            print("newfavecities" , newfavouriteCities)
-                            self.favouriteCities = Set(arrayLiteral: newfavouriteCities)
-                            print("initialized cities", self.favouriteCities)
-                             */
                             for i in favouritesFound! {
                                 let decoder = Firestore.Decoder()
                                 let decodedLocation = try decoder.decode(Locator.self, from: i, in: docRef)

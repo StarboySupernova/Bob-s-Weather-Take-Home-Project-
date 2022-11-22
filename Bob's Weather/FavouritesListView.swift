@@ -9,7 +9,9 @@ import SwiftUI
 import CoreLocation
 
 struct FavouritesListView: View {
-    @EnvironmentObject var favourites: FavouritesViewModel
+    @EnvironmentObject var favouritesViewModel: FavouritesViewModel
+    @EnvironmentObject var weatherViewModel: WeatherViewModelImplementation
+    @State private var showingCustom: Bool = false
     var body: some View {
         Group {
             VStack(spacing: 20) {
@@ -18,16 +20,74 @@ struct FavouritesListView: View {
                     .listRowInsets(EdgeInsets())
                 
                 Group {
-                    if favourites.isEmpty() {
+                    if favouritesViewModel.isEmpty() {
                         VStack{
                             Text("You have no favourites yet")
                                 .foregroundColor(.white)
                         }
                     } else {
-                        List(Array(self.favourites.favouriteCities)) { city in
-                            FavouriteRowView(city: city.name)
-                                .frame(maxWidth: getRect().width)
-                        }                        
+                        List(Array(self.favouritesViewModel.favouriteCities)) { city in
+                            /*FavouriteRowView(city: city.name)
+                             .frame(maxWidth: getRect().width)*/
+                            Section(header : SectionHeader(text: city.name)) {
+                                HStack {
+                                    Text("\(city.latitude)")
+                                        .foregroundColor(.white)
+                                        .fontWeight(.ultraLight)
+                                    
+                                    Text("\(city.longitude)")
+                                        .foregroundColor(.white)
+                                        .fontWeight(.ultraLight)
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        if let extractedCity = favouritesViewModel.first(occurring: city.name) {
+                                            LocationViewModel.locationProvider(latitude: extractedCity.latitude, longitude: extractedCity.longitude)
+                                            if LocationViewModel.customLocation != nil {
+                                                weatherViewModel.getForecast()
+                                                showingCustom.toggle()
+                                            }
+                                        }
+                                    } label: {
+                                        Text("Check Weather")
+                                            .foregroundColor(.white)
+                                            .padding(5)
+                                            .background {
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .stroke(Color.blue, lineWidth: 2)
+                                            }
+                                    }
+                                    .sheet(isPresented: $showingCustom) {
+                                        LocationViewModel.customLocation = nil
+                                    } content: {
+                                        switch weatherViewModel.state {
+                                            case .forecastSuccess(content: let forecast) :
+                                                WeatherSuccess(forecast: forecast)
+                                            case .loading :
+                                                ProgressView()
+                                            case .failed(error: let error) :
+                                                ErrorView(error: error) {
+                                                    weatherViewModel.getForecast()
+                                                }
+                                        }
+                                    }
+                                }
+                                .onTapGesture {
+                                    if let extractedCity = favouritesViewModel.first(occurring: city.name) {
+                                        LocationViewModel.locationProvider(latitude: extractedCity.latitude, longitude: extractedCity.longitude)
+                                        if LocationViewModel.customLocation != nil {
+                                            weatherViewModel.getForecast()
+                                            showingCustom.toggle()
+                                        } else {
+                                            showErrorAlertView("Error", "Custom Location not initialized", handler: {})
+                                        }
+                                    } else {
+                                        showErrorAlertView("Error", "Unable to extract city location", handler: {})
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 .frame(maxWidth: getRect().width)
@@ -36,19 +96,20 @@ struct FavouritesListView: View {
                 
                 Button {
                     LocationViewModel.customLocation = nil
-                    favourites.refresh()
-                    print(favourites.favouriteCities.count)
+                    favouritesViewModel.refresh()
+                    //print(favourites.favouriteCities.count)
                 } label: {
                     Text("Refresh")
                         .foregroundColor(.white)
                 }
-
+                
             }
         }
         .padding(.top, safeArea().top)
         .onAppear {
-            //favourites.refresh()
+            //favourites.refresh().
             LocationViewModel.customLocation = nil
+            UITableView.appearance().backgroundColor = .clear
         }
     }
 }
@@ -86,7 +147,7 @@ struct FavouriteRowView: View {
             } label: {
                 Text("Check Weather")
             }
-            .buttonStyle(CapsuleButtonStyle())
+            //.buttonStyle(CapsuleButtonStyle())
         }
         .padding(5)
         .padding(.vertical, 5)
@@ -103,9 +164,9 @@ struct FavouriteRowView: View {
                     Corners(corner: [.bottomRight, .topLeft], size: CGSize(width: getRect().width, height: 20))
                 )
         )
-        .modifier(FlatGlassView())
+        //.modifier(FlatGlassView())
         .sheet(isPresented: $showingCustom) {
-            LocationViewModel.customLocation = nil 
+            LocationViewModel.customLocation = nil
         } content: {
             switch weatherViewModel.state {
                 case .forecastSuccess(content: let forecast) :
@@ -118,7 +179,6 @@ struct FavouriteRowView: View {
                     }
             }
         }
-
     }
 }
 
