@@ -148,18 +148,18 @@ struct WeatherSuccess : View {
                         
                         ForEach(weatherList) { list in
                             HStack(spacing: 0) {
-                                Text(dayName(list.dt))
-                                    .padding(.leading)
-                                
-                                Spacer()//.frame(maxWidth: 500)
-                                
-                                iconView(list.weather[0].main)
-                                    .padding(.horizontal)
-                                
-                                Spacer()//.frame(minWidth: 0)
-                                
-                                Text(String.localizedStringWithFormat("%.0f°", list.main.tempMax))
-                                    .padding(.trailing)
+                                CustomRow {
+                                    Text(dayName(list.dt))
+                                        .font(.caption)
+                                        .padding(.leading)
+                                        .frame(maxWidth: 150, alignment: .leading)
+                                } center: {
+                                    iconView(list.weather[0].main)
+                                        .padding(.horizontal)
+                                } right: {
+                                    Text(String.localizedStringWithFormat("%.0f°", list.main.tempMax))
+                                        .padding(.trailing)
+                                }
                             }
                             .frame(maxWidth: getRect().width)
                         }

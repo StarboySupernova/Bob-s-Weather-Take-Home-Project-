@@ -36,7 +36,7 @@ struct SideMenu: View {
             //tab buttons
             VStack(alignment: .leading, spacing: 10) {
                 Spacer()
-                
+    
                 TabButton(image: "cloud.sun.rain.fill", title: "Weather", selectedTab: $selectedTab, animation: animation)
                 TabButton(image: "pin.fill", title: "Favourites", selectedTab: $selectedTab, animation: animation)
                 //TabButton(image: "clock", title: "History", selectedTab: $selectedTab, animation: animation)
@@ -47,8 +47,6 @@ struct SideMenu: View {
             Spacer()
             
             VStack(alignment: .leading, spacing: 6) {
-                //Sign out button here
-                
                 Text("App version 1.2.0")
                     .font(.caption)
                     .fontWeight(.light)

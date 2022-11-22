@@ -74,19 +74,19 @@ struct MenuView: View {
                             }
                             .rotationEffect(.init(degrees: showMenu ? 49.9 : 0.9))
                         }
-                        .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 0)
+                        .shadow(color: .black.opacity(0.5), radius: 1, x: 0, y: 0)
                         //.glow(color: .black.opacity(0.5), radius: 2)
                     }
-                        .if(!showMenu, transform: { view in
+                        /*.if(!showMenu, transform: { view in
                             view
                                 .buttonStyle(ColorfulButtonStyle())
-                        })
+                        })*/
                         .padding(.vertical) //useful to learn to detect which phones have a notch here
                     
                     ,alignment: .topLeading
                 )
             }
-
+            
         }
     }
 }
