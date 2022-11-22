@@ -97,8 +97,7 @@ struct WeatherSuccess : View {
                 .frame(maxWidth: getRect().width, maxHeight: getRect().height)
                 .overlay(alignment: .topTrailing) {
                     Button {
-                        if /*LocationViewModel.shared.lastSeenLocation != nil*/ let city = LocationViewModel.shared.currentPlacemark?.locality {
-                            //locationViewModel.addFavourite()
+                        if let city = LocationViewModel.shared.currentPlacemark?.locality {
                             if favouritesViewModel.contains(city) {
                                 showingSheet.toggle()
                             } else {
@@ -119,6 +118,7 @@ struct WeatherSuccess : View {
                                     .fill(.ultraThinMaterial)
                             }
                     }
+                    .padding()
 
                 }
                 

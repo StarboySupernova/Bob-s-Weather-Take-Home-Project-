@@ -45,7 +45,7 @@ func forecastMinMax(forecast: Forecast) -> (min :Double, max: Double)? {
     
     let finalIndex = forecast.list.firstIndex {
         //$0.dtTxt.contains("00:00:00") //not producing expected results
-        Date(timeIntervalSince1970: TimeInterval($0.dt)) > Calendar.current.date(byAdding: DateComponents(hour: 24), to: Date.now) ?? Date.now
+        Date(timeIntervalSince1970: TimeInterval($0.dt)) > Calendar.current.date(byAdding: DateComponents(hour: 24), to: Date.now) ?? Date.now //changed Boolean test from < to > and now it emits expected results
     }
     
     guard index != nil, finalIndex != nil else {

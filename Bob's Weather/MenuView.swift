@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIVisualEffects
 
 struct MenuView: View {
     //selected tab
@@ -15,7 +16,6 @@ struct MenuView: View {
     var body: some View {
         ResponsiveView { prop in
             ZStack(alignment: .leading) {
-                //HStack maybe?
                 if showMenu || (prop.isiPad && !prop.isSplit) {
                     ScrollView(getRect().height < 750 ? .vertical : .init(), showsIndicators: false) {
                         SideMenu(selectedTab: $selectedTab)
@@ -77,10 +77,10 @@ struct MenuView: View {
                         .shadow(color: .black.opacity(0.5), radius: 1, x: 0, y: 0)
                         //.glow(color: .black.opacity(0.5), radius: 2)
                     }
-                        /*.if(!showMenu, transform: { view in
+                        .if(!showMenu, transform: { view in
                             view
                                 .buttonStyle(ColorfulButtonStyle())
-                        })*/
+                        })
                         .padding(.vertical) //useful to learn to detect which phones have a notch here
                     
                     ,alignment: .topLeading

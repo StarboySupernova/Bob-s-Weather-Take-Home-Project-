@@ -49,6 +49,7 @@
 		909E7D1C28D1CACB00A380DF /* RowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909E7D1B28D1CACB00A380DF /* RowView.swift */; };
 		90BDE98628F4EF2C00ADAD47 /* Locator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BDE98528F4EF2C00ADAD47 /* Locator.swift */; };
 		90BECBE2292B2E8A005B7385 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 90BECBE1292B2E8A005B7385 /* GoogleService-Info.plist */; };
+		90C04CFA292CAF2F002713DB /* SwiftUIVisualEffects in Frameworks */ = {isa = PBXBuildFile; productRef = 90C04CF9292CAF2F002713DB /* SwiftUIVisualEffects */; };
 		90C2611B28C97E3F00B8538C /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C2611A28C97E3F00B8538C /* PageViewController.swift */; };
 		90C5263C28F622D300F3B60D /* Corners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C5263B28F622D300F3B60D /* Corners.swift */; };
 		90C7B2F6292C23AC00262513 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 90C7B2F5292C23AC00262513 /* FirebaseFirestoreSwift */; };
@@ -119,6 +120,7 @@
 				90494F96292B2F9800955009 /* FirebaseFirestore in Frameworks */,
 				90494F98292B2F9800955009 /* FirebaseStorage in Frameworks */,
 				90C7B2F6292C23AC00262513 /* FirebaseFirestoreSwift in Frameworks */,
+				90C04CFA292CAF2F002713DB /* SwiftUIVisualEffects in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +322,7 @@
 				90494F95292B2F9800955009 /* FirebaseFirestore */,
 				90494F97292B2F9800955009 /* FirebaseStorage */,
 				90C7B2F5292C23AC00262513 /* FirebaseFirestoreSwift */,
+				90C04CF9292CAF2F002713DB /* SwiftUIVisualEffects */,
 			);
 			productName = "Bob's Weather";
 			productReference = 90100A0C28C2D40500C1104D /* Bob's Weather.app */;
@@ -351,6 +354,7 @@
 			mainGroup = 90100A0328C2D40500C1104D;
 			packageReferences = (
 				90494F94292B2F9800955009 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				90C04CF8292CAF2F002713DB /* XCRemoteSwiftPackageReference "swiftui-visual-effects" */,
 			);
 			productRefGroup = 90100A0D28C2D40500C1104D /* Products */;
 			projectDirPath = "";
@@ -641,6 +645,14 @@
 				minimumVersion = 9.0.0;
 			};
 		};
+		90C04CF8292CAF2F002713DB /* XCRemoteSwiftPackageReference "swiftui-visual-effects" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lucasbrown/swiftui-visual-effects";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -653,6 +665,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 90494F94292B2F9800955009 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		90C04CF9292CAF2F002713DB /* SwiftUIVisualEffects */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90C04CF8292CAF2F002713DB /* XCRemoteSwiftPackageReference "swiftui-visual-effects" */;
+			productName = SwiftUIVisualEffects;
 		};
 		90C7B2F5292C23AC00262513 /* FirebaseFirestoreSwift */ = {
 			isa = XCSwiftPackageProductDependency;

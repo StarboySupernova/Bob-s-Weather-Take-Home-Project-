@@ -25,18 +25,18 @@ struct WalkThroughView: View {
                                 .clipped()
                                 .frame(width: screenSize.width, height: screenSize.height * 0.75)
                                 .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
-                                .cornerRadius(20, corners: .topLeft)
+                                .cornerRadius(20, corners: [.topLeft, .topRight])
                             Blur(style: .light)
                                 .frame(height : screenSize.height * 0.75)
                                 .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
-                                .cornerRadius(20, corners: .topLeft)
+                                .cornerRadius(20, corners: [.topLeft, .topRight])
                             Image(intro.image)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                                 .clipped()
                                 .frame(width: screenSize.width, height: screenSize.height * 0.75)
                                 .mask(LinearGradient(colors: [.white, .clear], startPoint: .top, endPoint: .bottom))
-                                .cornerRadius(20, corners: .topLeft)
+                                .cornerRadius(20, corners: [.topLeft, .topRight])
                             
                             VStack(alignment: .leading, spacing: 20) {
                                 Text(intro.title)
@@ -45,18 +45,23 @@ struct WalkThroughView: View {
                                     .bold()
                                     .multilineTextAlignment(.leading)
                                     .kerning(3)
+                                    .foregroundStyle(.secondary)
                                 
                                 Text(intro.description)
                                     .fontWeight(.semibold)
                                     .foregroundColor(.secondary)
+                                    .foregroundStyle(.tertiary)
                                     .padding(5)
                             }
                             .foregroundStyle(.white)
                             .padding(20)
+                            .background(.thinMaterial)
+                            .cornerRadius(10, corners: [.allCorners])
                         }
                         .padding()
                         .frame(width: screenSize.width)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        
                     }
                 }
             }
