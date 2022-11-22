@@ -10,6 +10,12 @@ import SwiftUI
 
 func forecastResultStrip(forecast: Forecast) -> [WeatherList]? {
     var times : [Int] = []
+    
+    var firstDay : [Int] = []
+    var secondDay : [Int] = []
+    var thirdDay : [Int] = []
+    var fourthDay : [Int] = []
+    var fifthDay : [Int] = []
 
     let currentWeatherTime = forecast.list.first {
         Date(timeIntervalSince1970: TimeInterval($0.dt)) > Date.now
@@ -19,9 +25,11 @@ func forecastResultStrip(forecast: Forecast) -> [WeatherList]? {
         return nil
     }
     
+    //MARK: first approach
     for i in stride(from: TimeInterval(currentWeatherTime!.dt), through: Date(timeIntervalSince1970: TimeInterval(currentWeatherTime!.dt + 432_000)).timeIntervalSince1970, by: 86_400) {
         times.append(Int(i))
     }
+    
     //print("this is times now",times)
         
     let res = forecast.list.filter({ weatherList in
@@ -32,7 +40,47 @@ func forecastResultStrip(forecast: Forecast) -> [WeatherList]? {
         $0.dtTxt
     }))*/
     
-    return res
+    //return res
+    
+    //MARK: second approach
+    for firstDayValue in stride(from: TimeInterval(currentWeatherTime!.dt), through: Date(timeIntervalSince1970: TimeInterval(currentWeatherTime!.dt + 86_400)).timeIntervalSince1970, by: 10_800) {
+        firstDay.append(Int(firstDayValue))
+    }
+    
+    for secondDayValue in stride(from: Date(timeIntervalSince1970: TimeInterval(currentWeatherTime!.dt + 86_400)).timeIntervalSince1970, through: Date(timeIntervalSince1970: TimeInterval(currentWeatherTime!.dt + 86_400 * 2)).timeIntervalSince1970, by: 10_800) {
+        secondDay.append(Int(secondDayValue))
+    }
+    
+    for thirdDayValue in stride(from: Date(timeIntervalSince1970: TimeInterval(currentWeatherTime!.dt + 86_400 * 2)).timeIntervalSince1970, through: Date(timeIntervalSince1970: TimeInterval(currentWeatherTime!.dt + 86_400 * 3)).timeIntervalSince1970, by: 10_800) {
+        thirdDay.append(Int(thirdDayValue))
+    }
+    
+    for fourthDayValue in stride(from: Date(timeIntervalSince1970: TimeInterval(currentWeatherTime!.dt + 86_400 * 3)).timeIntervalSince1970, through: Date(timeIntervalSince1970: TimeInterval(currentWeatherTime!.dt + 86_400 * 4)).timeIntervalSince1970, by: 10_800) {
+        fourthDay.append(Int(fourthDayValue))
+    }
+    
+    for fifthDayValue in stride(from: Date(timeIntervalSince1970: TimeInterval(currentWeatherTime!.dt + 86_400 * 4)).timeIntervalSince1970, to: Date(timeIntervalSince1970: TimeInterval(currentWeatherTime!.dt + 432_000)).timeIntervalSince1970, by: 10_800) {
+        fifthDay.append(Int(fifthDayValue))
+    }
+    
+    let firstDayMax = firstDay.max()
+    let secondDayMax = secondDay.max()
+    let thirdDayMax = thirdDay.max()
+    let fourthDayMax = fourthDay.max()
+    let fifthDayMax = fifthDay.max()
+    
+    guard firstDayMax != nil, secondDayMax != nil, thirdDayMax != nil, fourthDayMax != nil, fifthDayMax != nil else {
+        showErrorAlertView("Error", "Unable to initialize max values", handler: {})
+        return nil
+    }
+    
+    let maxArray = [firstDayMax!, secondDayMax!, thirdDayMax!, fourthDayMax!, fifthDayMax!]
+    
+    let result = forecast.list.filter { weatherList in
+        maxArray.contains(weatherList.dt)
+    }
+    
+    return result
 }
 
 func forecastMinMax(forecast: Forecast) -> (min :Double, max: Double)? {

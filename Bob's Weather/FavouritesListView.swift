@@ -31,15 +31,7 @@ struct FavouritesListView: View {
                             /*FavouriteRowView(city: city.name)
                              .frame(maxWidth: getRect().width)*/
                             Section(header : SectionHeader(text: city.name)) {
-                                HStack {
-                                 /*   Text("\(city.latitude)")
-                                        .foregroundColor(.white)
-                                        .fontWeight(.ultraLight)
-                                    
-                                    Text("\(city.longitude)")
-                                        .foregroundColor(.white)
-                                        .fontWeight(.ultraLight)*/
-                                    
+                                HStack {                                    
                                     Button {
                                         if let extractedCity = favouritesViewModel.first(occurring: city.name) {
                                             guard let token = deviceToken() else {
